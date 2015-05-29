@@ -1,8 +1,8 @@
-#include "Borrow.h"
+#include "../headers/Borrow.h"
 
 #include <ctime>
-#include "Student.h"
-#include "Book.h"
+#include "../headers/Student.h"
+#include "../headers/Book.h"
 
 Borrow::Borrow(Student* student, Book* book)
 {

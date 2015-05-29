@@ -1,5 +1,5 @@
-#include "Menu.h"
-#include "Selectable.h"
+#include "../headers/Menu.h"
+#include "../headers/Selectable.h"
 #include <iostream>
 #include <string>
 #include <vector>

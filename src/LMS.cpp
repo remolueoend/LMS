@@ -1,7 +1,7 @@
-#include "LMS.h"
-#include "Student.h"
-#include "Book.h"
-#include "Borrow.h"
+#include "../headers/LMS.h"
+#include "../headers/Student.h"
+#include "../headers/Book.h"
+#include "../headers/Borrow.h"
 #include <stdexcept>
 
 LMS::LMS()

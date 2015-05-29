@@ -1,4 +1,4 @@
-#include "Student.h"
+#include "../headers/Student.h"
 
 Student::Student(int studentID, string name, string department, string email)
 {

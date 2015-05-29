@@ -1,10 +1,9 @@
 #include <iostream>
-#include "LMS.h"
-#include "Menu.h"
-#include "Action.h"
-#include "Navigation.h"
-#include "IO.h"
-#include <iostream>
+#include "../headers/LMS.h"
+#include "../headers/Menu.h"
+#include "../headers/Action.h"
+#include "../headers/Navigation.h"
+#include "../headers/IO.h"
 
 using namespace std;
 

@@ -1,13 +1,13 @@
 
-#include "EscapeException.h"
+#include "../headers/EscapeException.h"
 #include <stdio.h>
-#include "IO.h"
+#include "../headers/IO.h"
 #include <string>
 #include <iostream>
 #include <functional>
 #include <limits>
-#include "Book.h"
-#include "LMS.h"
+#include "../headers/Book.h"
+#include "../headers/LMS.h"
 
 using namespace std;
 

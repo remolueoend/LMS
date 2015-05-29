@@ -1,11 +1,11 @@
-#include "Navigation.h"
+#include "../headers/Navigation.h"
 #include "Menu.h"
-#include "Action.h"
+#include "../headers/Action.h"
 #include <stdio.h>
 #include <iostream>
 #include <string>
 #include <functional>
-#include "EscapeException.h"
+#include "../headers/EscapeException.h"
 
 using namespace std;
 
