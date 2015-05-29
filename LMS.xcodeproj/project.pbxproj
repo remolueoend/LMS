@@ -7,7 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A6E058C11B0C7E0100041CB4 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6E058C01B0C7E0100041CB4 /* main.cpp */; };
+		A6D613FC1B185DF9000B4956 /* Book.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6D613EB1B185DF9000B4956 /* Book.cpp */; };
+		A6D613FD1B185DF9000B4956 /* Borrow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6D613ED1B185DF9000B4956 /* Borrow.cpp */; };
+		A6D613FE1B185DF9000B4956 /* LMS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6D613F11B185DF9000B4956 /* LMS.cpp */; };
+		A6D613FF1B185DF9000B4956 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6D613F31B185DF9000B4956 /* main.cpp */; };
+		A6D614001B185DF9000B4956 /* Menu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6D613F41B185DF9000B4956 /* Menu.cpp */; };
+		A6D614011B185DF9000B4956 /* Navigation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6D613F61B185DF9000B4956 /* Navigation.cpp */; };
+		A6D614021B185DF9000B4956 /* Selectable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6D613F81B185DF9000B4956 /* Selectable.cpp */; };
+		A6D614031B185DF9000B4956 /* Student.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6D613FA1B185DF9000B4956 /* Student.cpp */; };
+		A6D614081B189C29000B4956 /* IO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6D614071B189C29000B4956 /* IO.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,8 +31,29 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A6D613E91B185DF9000B4956 /* Action.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Action.h; sourceTree = SOURCE_ROOT; };
+		A6D613EA1B185DF9000B4956 /* App.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = App.h; sourceTree = SOURCE_ROOT; };
+		A6D613EB1B185DF9000B4956 /* Book.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Book.cpp; sourceTree = SOURCE_ROOT; };
+		A6D613EC1B185DF9000B4956 /* Book.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Book.h; sourceTree = SOURCE_ROOT; };
+		A6D613ED1B185DF9000B4956 /* Borrow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Borrow.cpp; sourceTree = SOURCE_ROOT; };
+		A6D613EE1B185DF9000B4956 /* Borrow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Borrow.h; sourceTree = SOURCE_ROOT; };
+		A6D613EF1B185DF9000B4956 /* IRender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRender.h; sourceTree = SOURCE_ROOT; };
+		A6D613F01B185DF9000B4956 /* List.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = List.h; sourceTree = SOURCE_ROOT; };
+		A6D613F11B185DF9000B4956 /* LMS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LMS.cpp; sourceTree = SOURCE_ROOT; };
+		A6D613F21B185DF9000B4956 /* LMS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMS.h; sourceTree = SOURCE_ROOT; };
+		A6D613F31B185DF9000B4956 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = SOURCE_ROOT; };
+		A6D613F41B185DF9000B4956 /* Menu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Menu.cpp; sourceTree = SOURCE_ROOT; };
+		A6D613F51B185DF9000B4956 /* Menu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Menu.h; sourceTree = SOURCE_ROOT; };
+		A6D613F61B185DF9000B4956 /* Navigation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Navigation.cpp; sourceTree = SOURCE_ROOT; };
+		A6D613F71B185DF9000B4956 /* Navigation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Navigation.h; sourceTree = SOURCE_ROOT; };
+		A6D613F81B185DF9000B4956 /* Selectable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Selectable.cpp; sourceTree = SOURCE_ROOT; };
+		A6D613F91B185DF9000B4956 /* Selectable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Selectable.h; sourceTree = SOURCE_ROOT; };
+		A6D613FA1B185DF9000B4956 /* Student.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Student.cpp; sourceTree = SOURCE_ROOT; };
+		A6D613FB1B185DF9000B4956 /* Student.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Student.h; sourceTree = SOURCE_ROOT; };
+		A6D614051B189998000B4956 /* EscapeException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EscapeException.h; sourceTree = "<group>"; };
+		A6D614061B189BBB000B4956 /* IO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IO.h; sourceTree = "<group>"; };
+		A6D614071B189C29000B4956 /* IO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IO.cpp; sourceTree = "<group>"; };
 		A6E058BD1B0C7E0100041CB4 /* LMS */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = LMS; sourceTree = BUILT_PRODUCTS_DIR; };
-		A6E058C01B0C7E0100041CB4 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,7 +86,28 @@
 		A6E058BF1B0C7E0100041CB4 /* LMS */ = {
 			isa = PBXGroup;
 			children = (
-				A6E058C01B0C7E0100041CB4 /* main.cpp */,
+				A6D613E91B185DF9000B4956 /* Action.h */,
+				A6D613EA1B185DF9000B4956 /* App.h */,
+				A6D613EB1B185DF9000B4956 /* Book.cpp */,
+				A6D613EC1B185DF9000B4956 /* Book.h */,
+				A6D613ED1B185DF9000B4956 /* Borrow.cpp */,
+				A6D613EE1B185DF9000B4956 /* Borrow.h */,
+				A6D613EF1B185DF9000B4956 /* IRender.h */,
+				A6D613F01B185DF9000B4956 /* List.h */,
+				A6D613F11B185DF9000B4956 /* LMS.cpp */,
+				A6D613F21B185DF9000B4956 /* LMS.h */,
+				A6D613F31B185DF9000B4956 /* main.cpp */,
+				A6D613F41B185DF9000B4956 /* Menu.cpp */,
+				A6D613F51B185DF9000B4956 /* Menu.h */,
+				A6D613F61B185DF9000B4956 /* Navigation.cpp */,
+				A6D613F71B185DF9000B4956 /* Navigation.h */,
+				A6D613F81B185DF9000B4956 /* Selectable.cpp */,
+				A6D613F91B185DF9000B4956 /* Selectable.h */,
+				A6D613FA1B185DF9000B4956 /* Student.cpp */,
+				A6D613FB1B185DF9000B4956 /* Student.h */,
+				A6D614051B189998000B4956 /* EscapeException.h */,
+				A6D614061B189BBB000B4956 /* IO.h */,
+				A6D614071B189C29000B4956 /* IO.cpp */,
 			);
 			path = LMS;
 			sourceTree = "<group>";
@@ -118,7 +168,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A6E058C11B0C7E0100041CB4 /* main.cpp in Sources */,
+				A6D613FE1B185DF9000B4956 /* LMS.cpp in Sources */,
+				A6D613FD1B185DF9000B4956 /* Borrow.cpp in Sources */,
+				A6D614021B185DF9000B4956 /* Selectable.cpp in Sources */,
+				A6D614031B185DF9000B4956 /* Student.cpp in Sources */,
+				A6D613FF1B185DF9000B4956 /* main.cpp in Sources */,
+				A6D613FC1B185DF9000B4956 /* Book.cpp in Sources */,
+				A6D614001B185DF9000B4956 /* Menu.cpp in Sources */,
+				A6D614081B189C29000B4956 /* IO.cpp in Sources */,
+				A6D614011B185DF9000B4956 /* Navigation.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -235,6 +293,7 @@
 				A6E058C61B0C7E0100041CB4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
