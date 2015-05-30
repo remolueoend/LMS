@@ -8,7 +8,7 @@
 class EscapeException : public std::runtime_error {
 
 public:
-    EscapeException() : runtime_error("ESCAPE_DETECTED") {}
+    EscapeException() : runtime_error("Canceled.") {}
 };
 
 

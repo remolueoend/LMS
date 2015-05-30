@@ -9,16 +9,16 @@
 class IO{
     
 public:
-    void read(std::string text, std::function<void (std::string input)> callback);
-    void readInt(std::string text, std::function<void (int input)> callback);
-    void readInt(std::string text, std::function<void (int input)> callback, int min, int max);
-    void readDouble(std::string text, std::function<void (double input)> callback);
-    void readDouble(std::string text, std::function<void (double input)> callback, double min, double max);
-    void readISBN(std::function<void (double input)> callback);
-    void readStudentID(std::function<void (int input)> callback);
+    string read(std::string text);
+    int readInt(std::string text);
+    int readInt(std::string text, int min, int max);
+    double readDouble(std::string text);
+    double readDouble(std::string text, double min, double max);
+    double readISBN();
+    int readStudentID();
     
-    void readBook(LMS* sys, std::function<void (Book* book)> callback);
-    void readStudent(LMS* sys, std::function<void (Student* student)> callback);
+    Book* readBook(LMS* sys);
+    Student* readStudent(LMS* sys);
 };
 
 

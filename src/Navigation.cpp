@@ -13,7 +13,7 @@ void Navigation::Render(Menu* root){
     OpenMenu(root);
 }
 
-void Navigation::OpenItem(unsigned int index){
+void Navigation::OpenItem(int index){
     Menu* cMenu = pOpenMenus.back();
     if(index > cMenu->GetSubItems().size() || index < 1){
         throw invalid_argument("Invalid index.");
@@ -45,12 +45,9 @@ void Navigation::OpenMenu(){
     int maxIndex = cm->GetSubItems().size();
     cout << endl;
     cm->Render();
-    
-    int selection = 0;
+
     try{
-        pIO->readInt(">> your choice", [&selection](int i) -> void {
-            selection = i;
-        }, 1, maxIndex);
+        int selection = pIO->readInt(">> your choice", 1, maxIndex);
         OpenItem(selection);
     }catch(EscapeException& ex){
         if(pOpenMenus.size() > 1){

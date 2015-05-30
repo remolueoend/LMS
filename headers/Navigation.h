@@ -27,7 +27,7 @@ class Navigation
 
         void Render(Menu* root);
         void OpenMenu(Menu* menu);
-        void OpenItem(unsigned int index);
+        void OpenItem(int index);
         void OpenMenu();
 
     protected:
