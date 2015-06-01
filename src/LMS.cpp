@@ -2,6 +2,7 @@
 #include "../headers/Student.h"
 #include "../headers/Book.h"
 #include "../headers/Borrow.h"
+#include "../headers/Record.h"
 #include <stdexcept>
 
 LMS::LMS()
@@ -58,11 +59,12 @@ Borrow* LMS::BorrowBook(Book* book, Student* student){
         throw std::invalid_argument("Student is not registered");
     }
 
+    long borrowCount = GetBorrowings(book)->Count();
     int q = book->GetQuantity();
-    if(q > 0){
-        book->SetQuantity(q - 1);
+    if(borrowCount < q){
         Borrow* newBorrow = new Borrow(student, book);
         pBorrows.Add(newBorrow);
+        pRecords.Add(new Record(BORROW, book, student));
         return newBorrow;
     }else{
         throw std::logic_error("Book is currently unavailable");
@@ -101,25 +103,15 @@ Borrow* LMS::BorrowBook(string bookTitle, string studentName){
     return BorrowBook(BookByTitle(bookTitle), StudentByName(studentName));
 }
 
-Borrow* LMS::ReturnBook(Book* book){
-    Borrow* b = pBorrows.First([book](Borrow* b) -> bool { return b->GetBook() == book; });
+Borrow* LMS::ReturnBook(Book* book, Student* student){
+    Borrow* b = pBorrows.First([book, student](Borrow* b) -> bool { return b->GetBook() == book && b->GetStudent() == student; });
     if(b == NULL){
-        throw std::invalid_argument("The given book was never borrowed.");
+        throw std::invalid_argument("This book was not borrowed by this student.");
     }
-    book->SetQuantity(book->GetQuantity() + 1);
     pBorrows.Remove(b);
-    
+    pRecords.Add(new Record(RETURN, book, student));
+
     return b;
-}
-
-Borrow* LMS::ReturnBook(double ISBN){
-    Book* b = BookByISBN(ISBN);
-    return ReturnBook(b);
-}
-
-Borrow* LMS::ReturnBook(string bookTitle){
-    Book* b = BookByTitle(bookTitle);
-    return ReturnBook(b);
 }
 
 Book* LMS::BookByISBN(double ISBN){
@@ -130,14 +122,22 @@ Book* LMS::BookByISBN(double ISBN){
     return b;
 }
 
+List<Book *> *LMS::Books(std::function<bool(Book *s)> condition) {
+    return pBooks.Filter(condition);
+}
+
 Book* LMS::BookByTitle(string bookTitle){
-    List<Book*>* bks = pBooks.Filter([bookTitle](Book* b) -> bool { return b->GetTitle() == bookTitle; });
+    List<Book*>* bks = Books([bookTitle](Book* b) -> bool { return b->GetTitle() == bookTitle; });
     if(bks->Count() > 1){
         throw std::invalid_argument("Multiple books found with the same title. Use the ISBN instead.");
     } else if(bks->Count() == 0){
         throw std::invalid_argument("Could not find a book with the given title.");
     }
     return bks->First();
+}
+
+List<Student *> *LMS::Students(std::function<bool(Student *s)> condition) {
+    return pStudents.Filter(condition);
 }
 
 Student* LMS::StudentByID(int studentID){
@@ -158,8 +158,34 @@ Student* LMS::StudentByName(string studentName){
     return stds->First();
 }
 
+List<Borrow*>* LMS::GetBorrowings(bool overdueOnly) {
+    if(overdueOnly){
+        return pBorrows.Filter([](Borrow* b) -> bool { return b->IsOverdue(); });
+    }else{
+        return &pBorrows;
+    }
+}
 
-LMS::~LMS()
-{
-    //dtor
+List<Borrow*>* LMS::GetBorrowings() {
+    return GetBorrowings(false);
+}
+
+List<Borrow*>* LMS::GetBorrowings(Book *book) {
+    return pBorrows.Filter([book](Borrow* b) -> bool {
+        return b->GetBook() == book;
+    });
+}
+
+List<Borrow*>* LMS::GetBorrowings(Student *student) {
+    return pBorrows.Filter([student](Borrow* b) -> bool {
+        return b->GetStudent() == student;
+    });
+}
+
+long LMS::QuantitiesLeft(Book *book) {
+    return book->GetQuantity() - GetBorrowings(book)->Count();
+}
+
+List<Record *> *LMS::GetRecords(Book *book) {
+    return pRecords.Filter([book](Record* r) -> bool { return r->ISBN() == book->GetISBN(); });
 }

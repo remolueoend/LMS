@@ -9,6 +9,7 @@ class Book
 {
     public:
         /** Default constructor */
+        Book(){ };
         Book(double ISBN, string title, string authors, string publisher, int year, int quantity);
 
         /** Default destructor */
@@ -75,7 +76,14 @@ class Book
          */
         void SetQuantity(int val) { pQuantity = val; }
 
-        friend bool operator== (Book & lhs, Book & rhs );
+        void Update(Book* book){
+            SetISBN(book->GetISBN());
+            SetTitle(book->GetTitle());
+            SetAuthors(book->GetAuthors());
+            SetPublisher(book->GetPublisher());
+            SetYear(book->GetYear());
+            SetQuantity(book->GetQuantity());
+        }
 
     protected:
 

@@ -9,6 +9,7 @@ class Student
 {
     public:
         /** Default constructor */
+        Student(){ }
         Student(int studentID, string name, string department, string email);
         /** Default destructor */
         virtual ~Student();
@@ -44,6 +45,13 @@ class Student
          * \param val New value to set
          */
         void SetEmail(string val) { pEmail = val; }
+
+        void Update(Student* student){
+            SetStudentId(student->GetStudentId());
+            SetName(student->GetName());
+            SetEmail(student->GetEmail());
+            SetDepartment(student->GetDepartment());
+        }
     protected:
 
     private:

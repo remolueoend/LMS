@@ -1,5 +1,5 @@
 #include "../headers/Navigation.h"
-#include "Menu.h"
+#include "../headers/Menu.h"
 #include "../headers/Action.h"
 #include <stdio.h>
 #include <iostream>
@@ -44,7 +44,7 @@ void Navigation::OpenMenu(){
     Menu* cm = pOpenMenus.back();
     int maxIndex = cm->GetSubItems().size();
     cout << endl;
-    cm->Render();
+    cm->Render(pOpenMenus);
 
     try{
         int selection = pIO->readInt(">> your choice", 1, maxIndex);

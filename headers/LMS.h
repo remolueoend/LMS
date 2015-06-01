@@ -4,6 +4,7 @@
 #include "Student.h"
 #include "Book.h"
 #include "Borrow.h"
+#include "Record.h"
 #include "List.h"
 #include <string>
 #include <vector>
@@ -21,7 +22,7 @@ class LMS
         LMS();
 
         /** Default destructor */
-        virtual ~LMS();
+        virtual ~LMS(){};
 
         List<Borrow*>* BorrowedBooks(){
             return &pBorrows;
@@ -53,15 +54,23 @@ class LMS
         Borrow* BorrowBook(string bookTitle, Student* student);
         Borrow* BorrowBook(string bookTitle, string studentName);
 
-        Borrow* ReturnBook(Book* book);
-        Borrow* ReturnBook(double ISBN);
-        Borrow* ReturnBook(string bookTitle);
+        Borrow* ReturnBook(Book* book, Student* student);
 
+        List<Book*>* Books(std::function<bool (Book* s)> condition);
         Book* BookByISBN(double ISBN);
         Book* BookByTitle(string bookTitle);
 
+        List<Student*>* Students(std::function<bool (Student* s)> condition);
         Student* StudentByID(int studentID);
         Student* StudentByName(string studentName);
+
+        List<Borrow*>* GetBorrowings();
+        List<Borrow*>* GetBorrowings(bool overdueOnly);
+        List<Borrow*>* GetBorrowings(Book* book);
+        List<Borrow*>* GetBorrowings(Student* student);
+        long QuantitiesLeft(Book* book);
+
+        List<Record*>* GetRecords(Book* book);
 
     protected:
 
@@ -69,6 +78,7 @@ class LMS
         List<Student*> pStudents;
         List<Book*> pBooks;
         List<Borrow*> pBorrows;
+        List<Record*> pRecords;
 
 
 };

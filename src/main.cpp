@@ -4,6 +4,8 @@
 #include "../headers/Action.h"
 #include "../headers/Navigation.h"
 #include "../headers/IO.h"
+#include "../headers/GroupableList.h"
+#include <ctime>
 
 using namespace std;
 
@@ -39,6 +41,30 @@ using namespace std;
    Manages the navigation through the menus and submenus and actions.
 
 */
+
+// Helper functions
+void _printBookDetails(Book* book, List<Borrow*>* borrowings){
+    cout << "ISBN:\t\t" << book->GetISBN() << endl;
+    cout << "title:\t\t" << book->GetTitle() << endl;
+    cout << "author:\t\t" << book->GetAuthors() << endl;
+    cout << "publisher:\t" << book->GetPublisher() << endl;
+    cout << "year:\t\t" << book->GetYear() << endl;
+    cout << "quantity:\t" << book->GetQuantity() << endl;
+    cout << "books left:\t" <<  book->GetQuantity() - borrowings->Count() << endl;
+
+    if(borrowings->Count() > 0) {
+        cout << endl << "Borrowed " << borrowings->Count() << " time(s) by:" << endl;
+        borrowings->ForEach([](Borrow *bor) -> void {
+            cout
+            << "ID: " << bor->GetStudent()->GetStudentId()
+            << ", name: " << bor->GetStudent()->GetName()
+            << ", overdue: " << (bor->IsOverdue() ? "yes" : "no")
+            << endl;
+        });
+    }else{
+        cout << "This book is not borrowed by anyone." << endl;
+    }
+}
 
 int main()
 {
@@ -86,35 +112,128 @@ int main()
         Book* book = io->readBook(sys);
         Student* student = io->readStudent(sys);
         Borrow* borrow = sys->BorrowBook(book, student);
-        cout << "Book borrowed successfully. Quantity left: " << borrow->GetBook()->GetQuantity() << endl;
+        cout << "Book borrowed successfully. Quantity left: " << sys->QuantitiesLeft(book) << endl;
             
     });
     
     Action* aReturnBook = new Action("Return a book", [](LMS* sys, IO* io) -> void{
         Book* book = io->readBook(sys);
-        Borrow* borrow = sys->ReturnBook(book);
-        cout << "Book returned successfully. Quantity left: " << borrow->GetBook()->GetQuantity() << endl;
-        
+        Student* student = io->readStudent(sys);
+        Borrow* borrow = sys->ReturnBook(book, student);
+        cout << "Book returned successfully. Quantity left: " << sys->QuantitiesLeft(book) << endl;
     });
     
     Action* aBookInfo = new Action("Get book info", [](LMS* sys, IO* io) -> void {
-        Book* book = io->readBook(sys);
-        cout << endl << "Book info:" << endl;
-        cout << "ISBN:\t\t" << book->GetISBN() << endl;
-        cout << "title:\t\t" << book->GetTitle() << endl;
-        cout << "author:\t\t" << book->GetAuthors() << endl;
-        cout << "publisher:\t" << book->GetPublisher() << endl;
-        cout << "year:\t\t" << book->GetYear() << endl;
-        cout << "quantity:\t" << book->GetQuantity() << endl;
+        List<Book*>* books = io->readBooks(sys, true);
+        cout << endl << "Found " << books->Count() << " books:" << endl;
+        books->ForEach([sys](Book* b) -> void {
+            cout << "---------------------------------------------------" << endl;
+            List<Borrow*>* borrowings = sys->GetBorrowings(b);
+            _printBookDetails(b, borrowings);
+        });
+    });
+
+    Action* aBorrowedBooks = new Action("Show borrowed books", [](LMS* sys, IO* io) -> void {
+        GroupableList<Book*, Borrow*>* list = new GroupableList<Book*, Borrow*>(sys->GetBorrowings());
+        Dictionary<Book*, List<Borrow*>*> dict = list->GroupBy([](Borrow* b) -> Book* { return b->GetBook(); });
+        if(dict.Count() > 0){
+            dict.ForEach([](KeyValuePair<Book*, List<Borrow*>*>* pair) -> void {
+                cout << "---------------------------------------------------" << endl;
+                _printBookDetails(pair->Key(), pair->Value());
+            });
+        }else{
+            cout << "Currenty no books are borrowed." << endl;
+        }
+    });
+
+    Action* aOverdueBooks = new Action("Show overdue books", [](LMS* sys, IO* io) -> void {
+        GroupableList<Book*, Borrow*>* list = new GroupableList<Book*, Borrow*>(sys->GetBorrowings(true));
+        Dictionary<Book*, List<Borrow*>*> dict = list->GroupBy([](Borrow* b) -> Book* { return b->GetBook(); });
+        if(dict.Count() > 0){
+            dict.ForEach([](KeyValuePair<Book*, List<Borrow*>*>* pair) -> void {
+                cout << "---------------------------------------------------" << endl;
+                _printBookDetails(pair->Key(), pair->Value());
+            });
+        }else{
+            cout << "Currenty no books are overdue." << endl;
+        }
     });
     
     Action* aStudentInfo = new Action("Get student info", [](LMS* sys, IO* io) -> void {
         Student* student = io->readStudent(sys);
+        List<Borrow*>* borrowings = sys->GetBorrowings(student);
         cout << endl << "Student info:" << endl;
         cout << "student ID:\t" << student->GetStudentId() << endl;
         cout << "name:\t\t" << student->GetName() << endl;
         cout << "department:\t" << student->GetDepartment() << endl;
         cout << "e-mail:\t\t" << student->GetEmail() << endl;
+
+        if(borrowings->Count() > 0){
+            cout << endl << "Borrowed " << borrowings->Count() << " book(s):" << endl;
+            borrowings->ForEach([](Borrow* b) -> void {
+                cout
+                    << "ISBN: " << b->GetBook()->GetISBN()
+                    << ", title: " << b->GetBook()->GetTitle()
+                    << ", overdue: " << (b->IsOverdue() ? "yes" : "no")
+                    << endl;
+            });
+        }else{
+            cout << "No books borrowed so far." << endl;
+        }
+    });
+
+    Action* aUpdateBook = new Action("Update book", [](LMS* sys, IO* io) -> void {
+        Book* book = io->readBook(sys);
+        Book* nb = new Book();
+
+        cout << "Enter the new data. To keep a current value, just press enter:" << endl;
+
+        nb->SetISBN(io->readISBN(true, book->GetISBN()));
+        nb->SetTitle(io->read("book title", true, book->GetTitle()));
+        nb->SetAuthors(io->read("author", true, book->GetAuthors()));
+        nb->SetPublisher(io->read("publsher", true, book->GetPublisher()));
+        nb->SetYear(io->readInt("year", -5000, 3000, true, book->GetYear()));
+        nb->SetQuantity(io->readInt("quantity", true, book->GetQuantity()));
+
+        book->Update(nb);
+        cout << "Book updated successfully." << endl;
+    });
+
+    Action* aUpdateStudent = new Action("Update student", [](LMS* sys, IO* io) -> void {
+        Student* student = io->readStudent(sys);
+        Student* ns = new Student();
+
+        cout << "Enter the new data. To keep a current value, just press enter:" << endl;
+
+        ns->SetStudentId(io->readStudentID(true, student->GetStudentId()));
+        ns->SetName(io->read("student name", true, student->GetName()));
+        ns->SetEmail(io->read("e-mail", true, student->GetEmail()));
+        ns->SetDepartment(io->read("department", true, student->GetDepartment()));
+
+        student->Update(ns);
+        cout << "Student updated successfully." << endl;
+    });
+
+    Action* aShowRecords = new Action("show book records", [](LMS* sys, IO* io) -> void {
+        Book* book = io->readBook(sys);
+        List<Record*>* records = sys->GetRecords(book);
+
+        cout
+            << "Records for book " << book->GetISBN() << ": "
+            << book->GetTitle() << " (" << book->GetAuthors() << "):" << endl;
+
+        if(records->Count() == 0){
+            cout << "No records found." << endl;
+            return;
+        }
+        records->ForEach([](Record* r) -> void {
+            cout << "---------------------------------------------------" << endl;
+            cout
+                << r->GetDateTimeStr() << ": "
+                << (r->GetType() == BORROW ? "borrowed" : "returned") << " by: "
+                << r->StudentName() << " (" << r->StudentID() << ")"
+                << endl;
+        });
     });
     
 
@@ -122,11 +241,16 @@ int main()
     Menu* mQuery = new Menu("Query the library");
     mQuery->AddSubItem(aBookInfo);
     mQuery->AddSubItem(aStudentInfo);
+    mQuery->AddSubItem(aBorrowedBooks);
+    mQuery->AddSubItem(aOverdueBooks);
+    mQuery->AddSubItem(aShowRecords);
     
     Menu* mManageData = new Menu("Manage data");
     mManageData->AddSubItem(aCreateBook);
-    mManageData->AddSubItem(aCreateStudent);
+    mManageData->AddSubItem(aUpdateBook);
     mManageData->AddSubItem(aRemoveBook);
+    mManageData->AddSubItem(aCreateStudent);
+    mManageData->AddSubItem(aUpdateStudent);
     mManageData->AddSubItem(aRemoveStudent);
 
     Menu* mRoot = new Menu("Main Menu");
@@ -153,6 +277,6 @@ int main()
     // Render the main menu:
     nav->Render(mRoot);
 
-    cout << "再见！";
+    cout << "再见！" << endl;
     return 0;
 }

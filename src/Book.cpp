@@ -1,4 +1,7 @@
 #include "../headers/Book.h"
+#include <iostream>
+
+using namespace std;
 
 Book::Book(double ISBN, string title, string authors, string publisher, int year, int quantity)
 {

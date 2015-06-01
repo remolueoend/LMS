@@ -37,12 +37,12 @@ class Borrow
         /** Access timestamp
          * \return The current value of timestamp
          */
-        long GetTimestamp() { return pTimestamp; }
+        time_t GetTimestamp() { return pTimestamp; }
 
         /** Set timestamp
          * \param val New value to set
          */
-        void SetTimestamp(long val) { pTimestamp = val; }
+        void SetTimestamp(time_t val) { pTimestamp = val; }
 
         /** Returns true if the book is borrowed for more than 30 days
          * \return If the borrow is overdue
@@ -54,7 +54,7 @@ class Borrow
     private:
         Student* pStudent; //!< Member variable "pStudent"
         Book* pBook; //!< Member variable "pBook"
-        long pTimestamp; //!< Member variable "timestamp"
+        time_t pTimestamp; //!< Member variable "timestamp"
 };
 
 #endif // BORROW_H

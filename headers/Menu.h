@@ -22,7 +22,7 @@ class Menu: public Selectable
 
         void AddSubItem(Selectable* item);
         vector<Selectable*> GetSubItems();
-        void Render();
+        void Render(vector<Menu*> menus);
     
         string GetTitle(){
             return Selectable::GetTitle();

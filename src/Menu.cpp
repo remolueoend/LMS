@@ -23,9 +23,14 @@ vector<Selectable*> Menu::GetSubItems(){
     return pSubItems;
 }
 
-void Menu::Render(){
-    cout << this->GetTitle() << endl;
-    cout << "============================================" << endl;
+void Menu::Render(vector<Menu*> menus){
+    for (typename std::vector<Menu*>::iterator it = menus.begin(); it != menus.end(); ++it){
+        if(it - menus.begin() > 0){
+            cout << " > ";
+        }
+        cout << (*it)->GetTitle();
+    }
+    cout << endl << "============================================" << endl;
 
     vector<Selectable*>::iterator it = pSubItems.begin();
     for (it=pSubItems.begin(); it!=pSubItems.end(); ++it) {

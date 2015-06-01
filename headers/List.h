@@ -15,12 +15,15 @@ class List
     public:
         /** Default constructor */
         List(std::vector<dataType> v) { this->v = v; }
+        List(List<dataType>* list) {
+            this->v = list->v;
+        };
         List(){ }
 
         /**
          * Adds a new element to the list.
          */
-        void Add(dataType item){
+        virtual void Add(dataType item){
             this->v.push_back(item);
         }
 
@@ -127,6 +130,13 @@ class List
             std::function<void (dataType item, int index)> nh =
                 [handler](dataType item, int index) -> void { handler(item); };
             ForEach(nh);
+        }
+
+        dataType At(long index){
+            if(index < 0 || index > Count() - 1){
+                throw runtime_error("Invald index");
+            }
+            return v[index];
         }
 
         std::vector<dataType> GetData(){
