@@ -24,6 +24,23 @@ string _dtostr(double val){
     return ss.str();
 }
 
+inline bool isInteger(const std::string & s)
+{
+    if(s.empty() || ((!isdigit(s[0])) && (s[0] != '-') && (s[0] != '+'))) return false ;
+    char * p ;
+    strtol(s.c_str(), &p, 10);
+    return (*p == 0) ;
+}
+inline bool isDouble(const std::string & s)
+{
+    if(s.empty() || ((!isdigit(s[0])) && (s[0] != '-') && (s[0] != '+'))) return false ;
+
+    char * p ;
+    strtod(s.c_str(), &p);
+
+    return (*p == 0) ;
+}
+
 string IO::read(string text) {
     return read(text, false, "");
 }
@@ -47,7 +64,7 @@ int IO::readInt(string text) {
     return readInt(text, false, 0);
 }
 int IO::readInt(string text, bool hasDefault, int defaultValue){
-    return readInt(text, numeric_limits<int>::min(), numeric_limits<int>::max(), hasDefault, defaultValue);
+    return readInt(text, -numeric_limits<int>::max(), numeric_limits<int>::max(), hasDefault, defaultValue);
 }
 
 int IO::readInt(string text, int min, int max){
@@ -60,25 +77,22 @@ int IO::readInt(string text, int min, int max, bool hasDefault, int defaultValue
     if(input.length() == 0 && hasDefault){
         return defaultValue;
     }
-    
-    try{
+
+    if(isInteger(input)){
         res = strtol(input.c_str(), NULL, 10);
-        if(res < min || res > max){
-            throw exception();
+        if(res >= min && res <= max){
+            return res;
         }
-        return res;
-        
-    }catch(exception ex){
-        cout << "Invalid entry. ";
-        return readInt(text, min, max, hasDefault, defaultValue);
     }
+    cout << "Invalid entry. ";
+    return readInt(text, min, max, hasDefault, defaultValue);
 }
 
 double IO::readDouble(string text){
     return readDouble(text, false, 0);
 }
 double IO::readDouble(string text, bool hasDefault, double defaultValue){
-    return readDouble(text, numeric_limits<double>::min(), numeric_limits<double>::max(), hasDefault, defaultValue);
+    return readDouble(text, -numeric_limits<double>::max(), numeric_limits<double>::max(), hasDefault, defaultValue);
 }
 
 double IO::readDouble(string text, double min, double max){
@@ -91,34 +105,47 @@ double IO::readDouble(string text, double min, double max, bool hasDefault, doub
     if(input.length() == 0 && hasDefault){
         return defaultValue;
     }
-    
-    try{
+
+    if(isDouble(input)){
         res = strtod(input.c_str(), NULL);
-        if(res < min || res > max){
-            throw exception();
+        if(res >= min && res <= max){
+            return res;
         }
-        return res;
-        
-    }catch(exception ex){
-        cout << "Invalid entry. ";
-        return readDouble(text, min, max);
     }
+    cout << "Invalid entry. ";
+    return readDouble(text, min, max);
 }
 
-double IO::readISBN(){
-    return readISBN(false, 0);
+string IO::readISBN(){
+    return readISBN(false, "");
 }
-double IO::readISBN(bool hasDefault, double defaultValue){
-    //todo: Set minimum to 1000000000
-    return readDouble("ISBN", 1, 9999999999999, hasDefault, defaultValue);
+string IO::readISBN(bool hasDefault, string defaultValue){
+    string result = "";
+    while(result.length() == 0){
+        string inp = read("ISBN", hasDefault, defaultValue);
+        if(inp.length() < 10 || inp.length() > 13){
+            cout << "Invalid ISBN. Must have 10 to 13 digits." << endl;
+        }else{
+            result = inp;
+        }
+    }
+    return result;
 }
 
-int IO::readStudentID(){
-    return readStudentID(false, 0);
+string IO::readStudentID(){
+    return readStudentID(false, "");
 }
-int IO::readStudentID(bool hasDefault, int defaultValue){
-    //todo: Set minimum to 100000
-    return readInt("student ID", 1, 999999, hasDefault, defaultValue);
+string IO::readStudentID(bool hasDefault, string defaultValue){
+    string result = "";
+    while(result.length() == 0){
+        string inp = read("student ID", hasDefault, defaultValue);
+        if(inp.length() != 7){
+            cout << "Invalid student ID. Must be between 0100000 and 0999999." << endl;
+        }else{
+            result = inp;
+        }
+    }
+    return result;
 }
 
 Book* IO::readBook(LMS* sys){
@@ -157,7 +184,7 @@ List<Book *> *IO::readBooks(LMS *sys, bool requireOne) {
     int choice = readInt("choose", 1, 5);
     try{
         if(choice == 1){
-            int ISBN = readISBN();
+            string ISBN = readISBN();
             filter = [ISBN](Book* b) -> bool { return b->GetISBN() == ISBN; };
         }else if(choice == 2){
             string title = read("book title");
@@ -215,33 +242,32 @@ List<Student *> *IO::readStudents(LMS *sys, bool requireOne) {
     cout << "3: e-mail" << endl;
     cout << "4: department" << endl;
 
-    std::function<bool (Student* s)> filter;
+    std::function<bool(Student *s)> filter;
     int choice = readInt("choose", 1, 4);
-    try{
-        if(choice == 1){
-            int stuId = readStudentID();
-            filter = [stuId](Student* s) -> bool { return s->GetStudentId() == stuId; };
-        }else if(choice == 2){
+    try {
+        if (choice == 1) {
+            string stuId = readStudentID();
+            filter = [stuId](Student *s) -> bool { return s->GetStudentId() == stuId; };
+        } else if (choice == 2) {
             string name = read("student name");
-            filter = [name](Student* s) -> bool { return s->GetName() == name; };
-        }else if(choice == 3){
+            filter = [name](Student *s) -> bool { return s->GetName() == name; };
+        } else if (choice == 3) {
             string email = read("e-mail");
-            filter = [email](Student* s) -> bool { return s->GetEmail() == email; };
-        }else if(choice == 4){
+            filter = [email](Student *s) -> bool { return s->GetEmail() == email; };
+        } else if (choice == 4) {
             string dept = read("department");
-            filter = [dept](Student* s) -> bool { return s->GetDepartment() == dept; };
-        }else{
+            filter = [dept](Student *s) -> bool { return s->GetDepartment() == dept; };
+        } else {
             throw runtime_error("Invalid choice.");
         }
-        List<Student*>* result = sys->Students(filter);
-        if(requireOne && result->Count() == 0){
+        List<Student *> *result = sys->Students(filter);
+        if (requireOne && result->Count() == 0) {
             cout << "Could not find any entries. Try again." << endl;
             return readStudents(sys, requireOne);
         }
         return sys->Students(filter);
-    }catch(EscapeException& ex){
+    } catch (EscapeException &ex) {
         cout << ex.what() << endl << endl;
         return readStudents(sys);
     }
-
 }

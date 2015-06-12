@@ -1,6 +1,6 @@
 #include "../headers/Student.h"
 
-Student::Student(int studentID, string name, string department, string email)
+Student::Student(string studentID, string name, string department, string email)
 {
     this->SetStudentId(studentID);
     this->SetName(name);

@@ -3,7 +3,7 @@
 
 using namespace std;
 
-Book::Book(double ISBN, string title, string authors, string publisher, int year, int quantity)
+Book::Book(string ISBN, string title, string authors, string publisher, int year, int quantity)
 {
     this->SetISBN(ISBN);
     this->SetTitle(title);

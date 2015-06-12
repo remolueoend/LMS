@@ -10,17 +10,17 @@ class Student
     public:
         /** Default constructor */
         Student(){ }
-        Student(int studentID, string name, string department, string email);
+        Student(string studentID, string name, string department, string email);
         /** Default destructor */
         virtual ~Student();
         /** Access pStudentId
          * \return The current value of pStudentId
          */
-        int GetStudentId() { return pStudentId; }
+        string GetStudentId() { return pStudentId; }
         /** Set pStudentId
          * \param val New value to set
          */
-        void SetStudentId(int val) { pStudentId = val; }
+        void SetStudentId(string val) { pStudentId = val; }
         /** Access pName
          * \return The current value of pName
          */
@@ -55,7 +55,7 @@ class Student
     protected:
 
     private:
-        int pStudentId; //!< Member variable "pStudentId"
+        string pStudentId; //!< Member variable "pStudentId"
         string pName; //!< Member variable "pName"
         string pDepartment; //!< Member variable "pDepartment"
         string pEmail; //!< Member variable "pEmail"

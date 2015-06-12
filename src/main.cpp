@@ -6,6 +6,9 @@
 #include "../headers/IO.h"
 #include "../headers/GroupableList.h"
 #include <ctime>
+#include <sstream>
+#include <fstream>
+#include <iomanip>
 
 using namespace std;
 
@@ -43,27 +46,52 @@ using namespace std;
 */
 
 // Helper functions
-void _printBookDetails(Book* book, List<Borrow*>* borrowings){
-    cout << "ISBN:\t\t" << book->GetISBN() << endl;
-    cout << "title:\t\t" << book->GetTitle() << endl;
-    cout << "author:\t\t" << book->GetAuthors() << endl;
-    cout << "publisher:\t" << book->GetPublisher() << endl;
-    cout << "year:\t\t" << book->GetYear() << endl;
-    cout << "quantity:\t" << book->GetQuantity() << endl;
-    cout << "books left:\t" <<  book->GetQuantity() - borrowings->Count() << endl;
+string _getBookDetails(Book *book, List<Borrow *> *borrowings){
+    stringstream ss;
+    ss << "ISBN:\t\t" << book->GetISBN() << endl;
+    ss << "title:\t\t" << book->GetTitle() << endl;
+    ss << "author:\t\t" << book->GetAuthors() << endl;
+    ss << "publisher:\t" << book->GetPublisher() << endl;
+    ss << "year:\t\t" << book->GetYear() << endl;
+    ss << "quantity:\t" << book->GetQuantity() << endl;
+    ss << "books left:\t" <<  book->GetQuantity() - borrowings->Count() << endl;
 
     if(borrowings->Count() > 0) {
-        cout << endl << "Borrowed " << borrowings->Count() << " time(s) by:" << endl;
-        borrowings->ForEach([](Borrow *bor) -> void {
-            cout
-            << "ID: " << bor->GetStudent()->GetStudentId()
+        ss << endl << "Borrowed " << borrowings->Count() << " time(s) by:" << endl;
+        borrowings->ForEach([&ss](Borrow *bor) -> void {
+            ss << "ID: " << bor->GetStudent()->GetStudentId()
             << ", name: " << bor->GetStudent()->GetName()
             << ", overdue: " << (bor->IsOverdue() ? "yes" : "no")
             << endl;
         });
     }else{
-        cout << "This book is not borrowed by anyone." << endl;
+        ss << "This book is not borrowed by anyone." << endl;
     }
+
+    return ss.str();
+}
+
+string _getStundetDetails(Student* student, List<Borrow*>* borrowings){
+    stringstream ss;
+    ss << "student ID:\t" << student->GetStudentId() << endl;
+    ss << "name:\t\t" << student->GetName() << endl;
+    ss << "department:\t" << student->GetDepartment() << endl;
+    ss << "e-mail:\t\t" << student->GetEmail() << endl;
+
+    if(borrowings->Count() > 0){
+        ss << endl << "Borrowed " << borrowings->Count() << " book(s):" << endl;
+        borrowings->ForEach([&ss](Borrow* b) -> void {
+            ss
+            << "ISBN: " << b->GetBook()->GetISBN()
+            << ", title: " << b->GetBook()->GetTitle()
+            << ", overdue: " << (b->IsOverdue() ? "yes" : "no")
+            << endl;
+        });
+    }else{
+        ss << "No books borrowed so far." << endl;
+    }
+
+    return ss.str();
 }
 
 int main()
@@ -75,14 +103,14 @@ int main()
 
     // Implement all necessary actions:
     Action* aCreateBook = new Action("Register a new book", [](LMS* sys, IO* io) -> void{
-        double iban = io->readISBN();
+        string isbn = io->readISBN();
         string title = io->read("title");
         string author = io->read("author");
         string publisher = io->read("publisher");
         int year = io->readInt("year (-5000 - 3000)", -5000, 3000);
         int quantity = io->readInt("quantity (max: 10000)", 1, 10000);
         
-        sys->AddBook(iban, title, author, publisher, year, quantity);
+        sys->AddBook(isbn, title, author, publisher, year, quantity);
         cout << "Book successfully registered." << endl;
     });
     
@@ -93,7 +121,7 @@ int main()
     });
     
     Action* aCreateStudent = new Action("Register a new student", [](LMS* sys, IO* io) -> void{
-        int studentId = io->readStudentID();
+        string studentId = io->readStudentID();
         string name = io->read("name");
         string dept = io->read("department");
         string email = io->read("e-mail");
@@ -125,11 +153,11 @@ int main()
     
     Action* aBookInfo = new Action("Get book info", [](LMS* sys, IO* io) -> void {
         List<Book*>* books = io->readBooks(sys, true);
-        cout << endl << "Found " << books->Count() << " books:" << endl;
+        cout << endl << "Found " << books->Count() << " book(s):" << endl;
         books->ForEach([sys](Book* b) -> void {
             cout << "---------------------------------------------------" << endl;
             List<Borrow*>* borrowings = sys->GetBorrowings(b);
-            _printBookDetails(b, borrowings);
+            cout << _getBookDetails(b, borrowings);
         });
     });
 
@@ -139,7 +167,7 @@ int main()
         if(dict.Count() > 0){
             dict.ForEach([](KeyValuePair<Book*, List<Borrow*>*>* pair) -> void {
                 cout << "---------------------------------------------------" << endl;
-                _printBookDetails(pair->Key(), pair->Value());
+                cout << _getBookDetails(pair->Key(), pair->Value());
             });
         }else{
             cout << "Currenty no books are borrowed." << endl;
@@ -152,7 +180,7 @@ int main()
         if(dict.Count() > 0){
             dict.ForEach([](KeyValuePair<Book*, List<Borrow*>*>* pair) -> void {
                 cout << "---------------------------------------------------" << endl;
-                _printBookDetails(pair->Key(), pair->Value());
+                cout << _getBookDetails(pair->Key(), pair->Value());
             });
         }else{
             cout << "Currenty no books are overdue." << endl;
@@ -160,26 +188,13 @@ int main()
     });
     
     Action* aStudentInfo = new Action("Get student info", [](LMS* sys, IO* io) -> void {
-        Student* student = io->readStudent(sys);
-        List<Borrow*>* borrowings = sys->GetBorrowings(student);
-        cout << endl << "Student info:" << endl;
-        cout << "student ID:\t" << student->GetStudentId() << endl;
-        cout << "name:\t\t" << student->GetName() << endl;
-        cout << "department:\t" << student->GetDepartment() << endl;
-        cout << "e-mail:\t\t" << student->GetEmail() << endl;
-
-        if(borrowings->Count() > 0){
-            cout << endl << "Borrowed " << borrowings->Count() << " book(s):" << endl;
-            borrowings->ForEach([](Borrow* b) -> void {
-                cout
-                    << "ISBN: " << b->GetBook()->GetISBN()
-                    << ", title: " << b->GetBook()->GetTitle()
-                    << ", overdue: " << (b->IsOverdue() ? "yes" : "no")
-                    << endl;
-            });
-        }else{
-            cout << "No books borrowed so far." << endl;
-        }
+        List<Student*>* students = io->readStudents(sys, true);
+        cout << endl << "Found " << students->Count() << " student(s):" << endl;
+        students->ForEach([sys](Student* s) -> void {
+            cout << "---------------------------------------------------" << endl;
+            List<Borrow*>* borrowings = sys->GetBorrowings(s);
+            cout << _getStundetDetails(s, borrowings);
+        });
     });
 
     Action* aUpdateBook = new Action("Update book", [](LMS* sys, IO* io) -> void {
@@ -235,6 +250,48 @@ int main()
                 << endl;
         });
     });
+
+    Action* aExportBooks = new Action("Export books", [](LMS* sys, IO* io) -> void {
+        cout << "The information of all registered books will be stored in the given path." << endl;
+        cout << "If the path already exists, the existing file will be replaced!" << endl;
+        cout << "The provided path can be relative to the LMS executable's location or a static path." << endl;
+
+        string filePath = io->read("file name", true, "books.txt");
+
+        ofstream myfile;
+        myfile.open(filePath, ios::trunc);
+
+        cout << endl << "Exporting " << sys->Books()->Count() << " books..." << endl;
+        sys->Books()->ForEach([sys, &myfile](Book* b) -> void {
+            myfile << "---------------------------------------------------" << endl;
+            List<Borrow*>* borrowings = sys->GetBorrowings(b);
+            myfile << _getBookDetails(b, borrowings);
+        });
+
+        myfile.close();
+        cout << "Export done." << endl;
+    });
+
+    Action* aExportStudents = new Action("Export students", [](LMS* sys, IO* io) -> void {
+        cout << "The information of all registered students will be stored in the given path." << endl;
+        cout << "If the path already exists, the existing file will be replaced!" << endl;
+        cout << "The provided path can be relative to the LMS executable's location or a static path." << endl;
+
+        string filePath = io->read("file name", true, "students.txt");
+
+        ofstream myfile;
+        myfile.open(filePath, ios::trunc);
+
+        cout << endl << "Exporting " << sys->Students()->Count() << " students..." << endl;
+        sys->Students()->ForEach([sys, &myfile](Student* s) -> void {
+            myfile << "---------------------------------------------------" << endl;
+            List<Borrow*>* borrowings = sys->GetBorrowings(s);
+            myfile << _getStundetDetails(s, borrowings);
+        });
+
+        myfile.close();
+        cout << "Export done." << endl;
+    });
     
 
     // Build the menu structure:
@@ -253,11 +310,16 @@ int main()
     mManageData->AddSubItem(aUpdateStudent);
     mManageData->AddSubItem(aRemoveStudent);
 
+    Menu* mExport = new Menu("Export data");
+    mExport->AddSubItem(aExportBooks);
+    mExport->AddSubItem(aExportStudents);
+
     Menu* mRoot = new Menu("Main Menu");
     mRoot->AddSubItem(aBorrowBook);
     mRoot->AddSubItem(aReturnBook);
     mRoot->AddSubItem(mManageData);
     mRoot->AddSubItem(mQuery);
+    mRoot->AddSubItem(mExport);
 
     // Show the start screen:
     cout << "Welcome to LMS (Library Management System)!" << endl;
@@ -267,12 +329,12 @@ int main()
 
 
     // Add some sample data:
-    lmsInstance->AddBook(1, "my book", "Remo", "Zumsteg", 2012, 1);
-    lmsInstance->AddBook(2693755987143, "your book", "Zumsteg", "Remo", 2012, 2);
-    lmsInstance->AddBook(3, "your book", "Zumsteg", "Remo", 2012, 2);
-    lmsInstance->AddStudent(1, "Remo", "R and D", "remo@zumsteg.com");
-    lmsInstance->AddStudent(2, "Zumsteg", "R and D 2", "zumsteg@remo.com");
-    lmsInstance->AddStudent(3, "Zumsteg", "R and D 2", "zumsteg@remo.com");
+    lmsInstance->AddBook("1234567890", "my book", "Remo", "Zumsteg", 2012, 3);
+    lmsInstance->AddBook("1234567891", "your book", "Zumsteg", "Remo", 2012, 5);
+    lmsInstance->AddBook("1234567892", "your book", "Zumsteg", "Remo", 2012, 5);
+    lmsInstance->AddStudent("0123456", "Remo", "R and D", "remo@zumsteg.com");
+    lmsInstance->AddStudent("0123457", "Zumsteg", "R and D 2", "zumsteg@remo.com");
+    lmsInstance->AddStudent("0123458", "Zumsteg", "R and D 2", "zumsteg@remo.com");
     
     // Render the main menu:
     nav->Render(mRoot);

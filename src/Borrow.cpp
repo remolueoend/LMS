@@ -14,7 +14,7 @@ Borrow::Borrow(Student* student, Book* book)
 
 bool Borrow::IsOverdue(){
     // 30 * 24 * 3600 = 30 days in seconds:
-    return time(0), this->GetTimestamp() > 30 * 24 * 3600;
+    return time(0) - this->GetTimestamp() > 30 * 24 * 3600;
 }
 
 Borrow::~Borrow()

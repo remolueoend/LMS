@@ -18,7 +18,7 @@ class Record {
 public:
     Record(RecordType type, Book* book, Student* student);
 
-    double ISBN(){
+    string ISBN(){
         return pISBN;
     }
 
@@ -26,7 +26,7 @@ public:
         return pTitle;
     }
 
-    int StudentID(){
+    string StudentID(){
         return pStudentID;
     }
 
@@ -43,9 +43,9 @@ public:
     tm* GetDateTime();
 
 private:
-    double pISBN;
+    string pISBN;
     string pTitle;
-    int pStudentID;
+    string pStudentID;
     string pStudentName;
     RecordType pType;
     time_t pTimestamp;

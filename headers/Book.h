@@ -10,7 +10,7 @@ class Book
     public:
         /** Default constructor */
         Book(){ };
-        Book(double ISBN, string title, string authors, string publisher, int year, int quantity);
+        Book(string ISBN, string title, string authors, string publisher, int year, int quantity);
 
         /** Default destructor */
         virtual ~Book();
@@ -29,12 +29,12 @@ class Book
          * \return The current value of pISBN
          */
 
-        double GetISBN() { return pISBN; }
+        string GetISBN() { return pISBN; }
 
         /** Set pISBN
          * \param val New value to set
          */
-        void SetISBN(double val) { pISBN = val; }
+        void SetISBN(string val) { pISBN = val; }
 
         /** Access pAuthors[]
          * \return The current value of pAuthors
@@ -89,7 +89,7 @@ class Book
 
     private:
         string pTitle; //!< Member variable "pTitle"
-        double pISBN; //!< Member variable "pISBN"
+        string pISBN; //!< Member variable "pISBN"
         string pAuthors; //!< Member variable "authors"
         string pPublisher; //!< Member variable "publisher"
         int pYear; //!< Member variable "year"

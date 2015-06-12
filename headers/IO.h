@@ -19,10 +19,10 @@ public:
     double readDouble(std::string text, bool hasDefault, double defaultValue);
     double readDouble(std::string text, double min, double max);
     double readDouble(std::string text, double min, double max, bool hasDefault, double defaultValue);
-    double readISBN();
-    double readISBN(bool hasDefault, double defaultValue);
-    int readStudentID();
-    int readStudentID(bool hasDefault, int defaultValue);
+    string readISBN();
+    string readISBN(bool hasDefault, string defaultValue);
+    string readStudentID();
+    string readStudentID(bool hasDefault, string defaultValue);
     
     Book* readBook(LMS* sys);
     List<Book*>* readBooks(LMS* sys);
