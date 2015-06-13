@@ -3,7 +3,6 @@
 
 #include <vector>
 #include <functional>
-#include <algorithm>
 
 template <class dataType>
 
@@ -70,21 +69,6 @@ class List
                 }
             }
             return false;
-        }
-
-        /**
-         * Removes the first element which matches the condition.
-         */
-        bool RemoveFirst(std::function<bool (dataType)> condition){
-            v.erase( std::remove_if(v.begin(), v.end(), condition), v.end() );
-            /*for (typename std::vector<dataType>::iterator it = v.begin(); it != v.end(); ++it){
-                if(condition(*it)){
-                    v.erase(it - v.begin());
-                    return true;
-                }
-            }
-            */
-            return true;
         }
 
         /**
