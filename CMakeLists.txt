@@ -27,4 +27,4 @@ set(SOURCE_FILES
     src/Selectable.cpp
     src/Student.cpp)
 
-add_executable(LMS ${SOURCE_FILES} headers/Dictionary.h headers/GroupableList.h src/Record.cpp headers/Record.h)
+add_executable(LMS ${SOURCE_FILES} headers/Dictionary.h headers/GroupableList.h src/Record.cpp headers/Record.h src/Actions.cpp headers/Actions.h)
