@@ -31,4 +31,6 @@ set(SOURCE_FILES
     src/Actions.cpp
     headers/Actions.h)
 
+set( CMAKE_RUNTIME_OUTPUT_DIRECTORY "/Users/remo/Development/NCTU/1496/LMS/bin")
+
 add_executable(LMS ${SOURCE_FILES})
