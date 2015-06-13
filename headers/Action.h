@@ -5,7 +5,7 @@
 #include "LMS.h"
 #include <functional>
 #include <string>
-#include "Navigation.h"
+#include "App.h"
 #include "IO.h"
 
 using namespace std;

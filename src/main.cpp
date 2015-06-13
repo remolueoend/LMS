@@ -2,12 +2,6 @@
 #include "../headers/LMS.h"
 #include "../headers/Menu.h"
 #include "../headers/Action.h"
-#include "../headers/Navigation.h"
-#include "../headers/IO.h"
-#include "../headers/GroupableList.h"
-#include <ctime>
-#include <sstream>
-#include <fstream>
 #include <iomanip>
 #include "../headers/Actions.h"
 
@@ -22,7 +16,7 @@ using namespace std;
    - Book Class containing information of a book
    - Student Class containing information about a student
    - Borrow Class containing information about a borrowed book (which book, which students, what date/time)
-   - Record Class wrapping sincle book records
+   - Record Class wrapping single book records
 
  * The LMS Class
    -------------------------
@@ -41,7 +35,7 @@ using namespace std;
    -------------------------
    Represents a menu or a submenu, containing submenu and actions.
 
- * The Navigation Class
+ * The App Class
    -------------------------
    Manages the navigation through the menus and submenus and actions.
 
@@ -56,7 +50,7 @@ int main()
     // Global instances used in the application:
     LMS* lmsInstance = new LMS();
     IO* ioInstance = new IO();
-    Navigation *nav = new Navigation(lmsInstance, ioInstance);
+    App *app = new App(lmsInstance, ioInstance);
 
     // Build the menu structure:
     Menu* mQuery = new Menu("Query the library");
@@ -101,7 +95,7 @@ int main()
     lmsInstance->AddStudent("0123458", "Zumsteg", "R and D 2", "zumsteg@remo.com");
     
     // Render the main menu:
-    nav->Render(mRoot);
+    app->Render(mRoot);
 
     cout << "再见！" << endl;
     return 0;

@@ -5,7 +5,7 @@
 
 using namespace std;
 
-class Navigation;
+class App;
 
 /**
  * Base class of selectable menu items, such as sub menus or actions

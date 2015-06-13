@@ -1,31 +1,27 @@
-#include "../headers/Navigation.h"
 #include "../headers/Menu.h"
 #include "../headers/Action.h"
-#include <stdio.h>
 #include <iostream>
-#include <string>
-#include <functional>
 #include "../headers/EscapeException.h"
 
 using namespace std;
 
-void Navigation::Render(Menu* root){
+void App::Render(Menu *root) {
     OpenMenu(root);
 }
 
-void Navigation::OpenItem(int index){
+void App::OpenItem(int index) {
     Menu* cMenu = pOpenMenus.back();
     if(index > cMenu->GetSubItems().size() || index < 1){
         throw invalid_argument("Invalid index.");
     }
     Selectable* cItem = cMenu->GetSubItems()[index - 1];
-    
-    if(Menu* v = dynamic_cast<Menu*>(cItem)) {
-        OpenMenu(v);
-    }else if(Action* v = dynamic_cast<Action*>(cItem)){
-        cout << endl << v->GetTitle() << ":" << endl;
+
+    if (Menu *m = dynamic_cast<Menu *>(cItem)) {
+        OpenMenu(m);
+    } else if (Action *a = dynamic_cast<Action *>(cItem)) {
+        cout << endl << a->GetTitle() << ":" << endl;
         try{
-            v->Handle(pSys, pIO);
+            a->Handle(pSys, pIO);
         }catch(EscapeException& ex){
             cout << "Canceled." << endl;
         }catch(exception& ex){
@@ -37,12 +33,12 @@ void Navigation::OpenItem(int index){
     }
 }
 
-void Navigation::OpenMenu(){
+void App::OpenMenu() {
     if(pOpenMenus.size() == 0){
         return;
     }
     Menu* cm = pOpenMenus.back();
-    int maxIndex = cm->GetSubItems().size();
+    int maxIndex = (int) cm->GetSubItems().size();
     cout << endl;
     cm->Render(pOpenMenus);
 
@@ -64,7 +60,7 @@ void Navigation::OpenMenu(){
     }
 }
 
-void Navigation::OpenMenu(Menu* menu){
+void App::OpenMenu(Menu *menu) {
     pOpenMenus.push_back(menu);
     OpenMenu();
 }

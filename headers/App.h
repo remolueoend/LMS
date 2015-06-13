@@ -1,28 +1,42 @@
-#ifndef LMS_App_h
-#define LMS_App_h
+#ifndef NAVIGATION_H
+#define NAVIGATION_H
 
-#include "Navigation.h"
 #include "LMS.h"
+#include <vector>
+#include "Menu.h"
+#include "IO.h"
+#include <string>
+#include <functional>
 
-class LMS;
-class Navigation;
+class Menu;
 
-class App{
+/**
+ * Manages the app's menus and actions and renders the navigation
+ */
+class App
+{
+    public:
+        /** Default constructor */
+        App(LMS *sys, IO *io) {
+            pSys = sys;
+            pIO = io;
+        }
 
-public:
-    LMS* LMS(){
-        return pLMS;
-    }
+        /** Default destructor */
+        virtual ~App() { };
+
+        void Render(Menu* root);
+        void OpenMenu(Menu* menu);
+        void OpenItem(int index);
+        void OpenMenu();
+
+    protected:
     
-    Navigation* Nav(){
-        return pNav;
-    }
-    
-private:
-    LMS* pLMS;
-    Navigation* pNav;
-    
+
+    private:
+        vector<Menu*> pOpenMenus;
+        LMS* pSys;
+        IO* pIO;
 };
 
-
-#endif
+#endif // NAVIGATION_H
