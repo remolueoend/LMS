@@ -206,7 +206,7 @@ List<Book *> *IO::readBooks(LMS *sys, bool requireOne) {
             cout << "Could not find any entries. Try again." << endl;
             return readBooks(sys, requireOne);
         }
-        return sys->Books(filter);
+        return result;
     }catch(EscapeException& ex){
         cout << ex.what() << endl << endl;
         return readBooks(sys);
@@ -265,7 +265,7 @@ List<Student *> *IO::readStudents(LMS *sys, bool requireOne) {
             cout << "Could not find any entries. Try again." << endl;
             return readStudents(sys, requireOne);
         }
-        return sys->Students(filter);
+        return result;
     } catch (EscapeException &ex) {
         cout << ex.what() << endl << endl;
         return readStudents(sys);
