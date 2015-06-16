@@ -4,16 +4,42 @@
 #include <vector>
 #include <functional>
 
-/** This generic class encapsulates a C++ vector array and provides additional functionality
+// structs for testing for pointers:
+template<typename T>
+struct isPointer {
+    enum {
+        value = 0
+    };
+
+};
+template<typename T>
+struct isPointer<T *> {
+    enum {
+        value = 1
+    };
+};
+
+/**
+ * This generic class encapsulates a C++ vector array and provides additional functionality
  * for manipulating and querying data.
+ * Initialization of this class is only possible with a pointer-type:
+ * > new List<MyType>()     // fails
+ * > new List<MyType*>()    // ok
+ *
+ * The reason for this is the List::First() method, which returns a NULLPTR if no item
+ * is in the collection.
  */
-template<typename dataType>
+template<typename T>
 class List
 {
+    // test for pointers:
+    static_assert(isPointer<T>::value, "T must be a pointer");
+
     public:
         /** Default constructor */
-        List(std::vector<dataType> v) { this->v = v; }
-        List(List<dataType>* list) {
+        List(std::vector<T> v) { this->v = v; }
+
+    List(List<T> *list) {
             this->v = list->v;
         };
         List(){ }
@@ -21,28 +47,28 @@ class List
         /**
          * Adds a new element to the list.
          */
-        virtual void Add(dataType item){
+        virtual void Add(T item) {
             this->v.push_back(item);
         }
 
         /**
         * Returns a new list containing the elements which match the condition.
         */
-        List<dataType>* Filter(std::function<bool (dataType)> condition){
-            std::vector<dataType> result;
+        List<T> *Filter(std::function<bool(T)> condition) {
+            std::vector<T> result;
             for(unsigned int i = 0; i < v.size(); i++){
                 if(condition(v[i])){
                     result.push_back(v[i]);
                 }
             }
-            return new List<dataType>(result);
+            return new List<T>(result);
         }
 
         /**
          * Returns the pointer of the first element in the list.
          * If the list is empty, a NULL pointer will be returned.
          */
-        dataType First(){
+        T First() {
             if(v.size() > 0){
                 return v.front();
             }else{
@@ -54,14 +80,14 @@ class List
          * Returns the pointer of the first element in the list which matches the condition.
          * If no element matches, a NULL pointer will be returned.
          */
-        dataType First(std::function<bool (dataType)> condition){
+        T First(std::function<bool(T)> condition) {
             return Filter(condition)->First();
         }
 
         /**
          * Returns if one or more elements matches the given condition.
          */
-        bool Any(std::function<bool (dataType)> condition){
+        bool Any(std::function<bool(T)> condition) {
             for(unsigned int i = 0; i < v.size(); i++){
                 if(condition(v[i])){
                     return true;
@@ -74,8 +100,8 @@ class List
         * Removes the given element from the list. If the element is not a part of the list,
         * the function will return false.
         */
-        bool Remove(dataType item){
-            for (typename std::vector<dataType>::iterator it = v.begin(); it != v.end(); ++it){
+        bool Remove(T item) {
+            for (typename std::vector<T>::iterator it = v.begin(); it != v.end(); ++it) {
                 if(*it == item){
                     v.erase(it);
                     return true;
@@ -87,8 +113,8 @@ class List
         /**
          * Returns if the given element is part of the list.
          */
-        bool Exists(dataType item){
-            for (typename std::vector<dataType>::iterator it = v.begin(); it != v.end(); ++it){
+        bool Exists(T item) {
+            for (typename std::vector<T>::iterator it = v.begin(); it != v.end(); ++it) {
                 if(item == *it){
                     return true;
                 }
@@ -103,26 +129,26 @@ class List
             return v.size();
         }
 
-        void ForEach(std::function<void (dataType item, int index)> handler){
-            for (typename std::vector<dataType>::iterator it = v.begin(); it != v.end(); ++it){
+    void ForEach(std::function<void(T item, int index)> handler) {
+        for (typename std::vector<T>::iterator it = v.begin(); it != v.end(); ++it) {
                 handler(*it, it - v.begin());
             }
         }
 
-        void ForEach(std::function<void (dataType item)> handler){
-            std::function<void (dataType item, int index)> nh =
-                [handler](dataType item, int index) -> void { handler(item); };
+    void ForEach(std::function<void(T item)> handler) {
+        std::function<void(T item, int index)> nh =
+                [handler](T item, int index) -> void { handler(item); };
             ForEach(nh);
         }
 
-        dataType At(long index){
+    T At(long index) {
             if(index < 0 || index > Count() - 1){
                 throw runtime_error("Invald index");
             }
             return v[index];
         }
 
-        std::vector<dataType> GetData(){
+    std::vector<T> GetData() {
             return v;
         }
 
@@ -132,7 +158,7 @@ class List
     protected:
 
     private:
-        std::vector<dataType> v; //!< Member variable "v"
+    std::vector<T> v; //!< Member variable "v"
 };
 
 #endif // LIST_H
