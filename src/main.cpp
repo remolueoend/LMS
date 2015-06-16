@@ -110,6 +110,6 @@ int main(int argc, char *argv[])
     // Render the main menu:
     app->Render(mRoot);
 
-    cout << "Good bye！" << endl;
+    cout << "Good bye!" << endl;
     return 0;
 }
