@@ -302,3 +302,23 @@ void Actions::ExportStudents(LMS *sys, IO *io) {
     myfile.close();
     cout << "Export done." << endl;
 };
+
+void Actions::ShowAllBooks(LMS *sys, IO *io) {
+    List<Book *> *books = sys->Books();
+    cout << books->Count() << " book(s) are registered in the system." << endl;
+    books->ForEach([sys](Book *b) -> void {
+        cout << "---------------------------------------------------" << endl;
+        List<Borrow *> *borrowings = sys->GetBorrowings(b);
+        cout << getBookDetails(b, borrowings);
+    });
+}
+
+void Actions::ShowAllStudents(LMS *sys, IO *io) {
+    List<Student *> *students = sys->Students();
+    cout << students->Count() << " students(s) are registered in the system." << endl;
+    students->ForEach([sys](Student *s) -> void {
+        cout << "---------------------------------------------------" << endl;
+        List<Borrow *> *borrowings = sys->GetBorrowings(s);
+        cout << getStudentDetails(s, borrowings);
+    });
+}

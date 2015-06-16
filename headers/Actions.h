@@ -32,6 +32,10 @@ public:
 
     static void BooksInfo(LMS *sys, IO *io);
 
+    static void ShowAllBooks(LMS *sys, IO *io);
+
+    static void ShowAllStudents(LMS *sys, IO *io);
+
     static void BorrowedBooks(LMS *sys, IO *io);
 
     static void OverdueBooks(LMS *sys, IO *io);

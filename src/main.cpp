@@ -63,6 +63,8 @@ int main(int argc, char *argv[])
     mQuery->AddAction("Show borrowed books", Actions::BorrowedBooks);
     mQuery->AddAction("Show overdue books", Actions::OverdueBooks);
     mQuery->AddAction("Show book records", Actions::ShowRecords);
+    mQuery->AddAction("Show all registered books", Actions::ShowAllBooks);
+    mQuery->AddAction("Show all registered students", Actions::ShowAllStudents);
     
     Menu* mManageData = new Menu("Manage data");
     mManageData->AddAction("Register a new book", Actions::CreateBook);
@@ -100,7 +102,9 @@ int main(int argc, char *argv[])
         lmsInstance->AddStudent("0123457", "Zumsteg", "R and D 2", "zumsteg@remo.com");
         lmsInstance->AddStudent("0123458", "Zumsteg", "R and D 2", "zumsteg@remo.com");
     }
-    
+
+
+
     // Render the main menu:
     app->Render(mRoot);
 
