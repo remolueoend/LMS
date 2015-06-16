@@ -45,7 +45,11 @@ using namespace std;
 
 */
 
-int main()
+/**
+ * Available start arguments:
+ * /sample-data: Adds a list of sample books and students to the System on startup.
+ */
+int main(int argc, char *argv[])
 {
     // Global instances used in the application:
     LMS* lmsInstance = new LMS();
@@ -86,13 +90,16 @@ int main()
     cout << "Have Fun!" << endl << endl;
 
 
-    // Add some sample data:
-    lmsInstance->AddBook("1234567890", "my book", "Remo", "Zumsteg", 2012, 3);
-    lmsInstance->AddBook("1234567891", "your book", "Zumsteg", "Remo", 2012, 5);
-    lmsInstance->AddBook("1234567892", "your book", "Zumsteg", "Remo", 2012, 5);
-    lmsInstance->AddStudent("0123456", "Remo", "R and D", "remo@zumsteg.com");
-    lmsInstance->AddStudent("0123457", "Zumsteg", "R and D 2", "zumsteg@remo.com");
-    lmsInstance->AddStudent("0123458", "Zumsteg", "R and D 2", "zumsteg@remo.com");
+    // Add some sample data if requested:
+    // hint: argv[0] is the name of the program.
+    if (argc > 1 && std::string(argv[1]) == "--sample-data") {
+        lmsInstance->AddBook("1234567890", "my book", "Remo", "Zumsteg", 2012, 3);
+        lmsInstance->AddBook("1234567891", "your book", "Zumsteg", "Remo", 2012, 5);
+        lmsInstance->AddBook("1234567892", "your book", "Zumsteg", "Remo", 2012, 5);
+        lmsInstance->AddStudent("0123456", "Remo", "R and D", "remo@zumsteg.com");
+        lmsInstance->AddStudent("0123457", "Zumsteg", "R and D 2", "zumsteg@remo.com");
+        lmsInstance->AddStudent("0123458", "Zumsteg", "R and D 2", "zumsteg@remo.com");
+    }
     
     // Render the main menu:
     app->Render(mRoot);
