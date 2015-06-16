@@ -204,7 +204,7 @@ void Actions::UpdateBook(LMS *sys, IO *io) {
     nb->SetISBN(io->readISBN(true, book->GetISBN()));
     nb->SetTitle(io->read("book title", true, book->GetTitle()));
     nb->SetAuthors(io->read("author", true, book->GetAuthors()));
-    nb->SetPublisher(io->read("publsher", true, book->GetPublisher()));
+    nb->SetPublisher(io->read("publisher", true, book->GetPublisher()));
     nb->SetYear(io->readInt("year", -5000, 3000, true, book->GetYear()));
     nb->SetQuantity(io->readInt("quantity", true, book->GetQuantity()));
 
@@ -261,7 +261,7 @@ void Actions::ShowRecords(LMS *sys, IO *io) {
 void Actions::ExportBooks(LMS *sys, IO *io) {
     cout << "The information of all registered books will be stored in the given path." << endl;
     cout << "If the path already exists, the existing file will be replaced!" << endl;
-    cout << "The provided path can be relative to the LMS executable's location or a static path." << endl;
+    cout << "The provided path can be relative to the current working directory or a static path." << endl;
 
     string filePath = io->read("file name", true, "books.txt");
 
@@ -285,7 +285,7 @@ void Actions::ExportBooks(LMS *sys, IO *io) {
 void Actions::ExportStudents(LMS *sys, IO *io) {
     cout << "The information of all registered students will be stored in the given path." << endl;
     cout << "If the path already exists, the existing file will be replaced!" << endl;
-    cout << "The provided path can be relative to the LMS executable's location or a static path." << endl;
+    cout << "The provided path can be relative to the current working directory or a static path." << endl;
 
     string filePath = io->read("file name", true, "students.txt");
 
