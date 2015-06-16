@@ -95,12 +95,14 @@ int main(int argc, char *argv[])
     // Add some sample data if requested:
     // hint: argv[0] is the name of the program.
     if (argc > 1 && std::string(argv[1]) == "--sample-data") {
-        lmsInstance->AddBook("1234567890", "my book", "Remo", "Zumsteg", 2012, 3);
-        lmsInstance->AddBook("1234567891", "your book", "Zumsteg", "Remo", 2012, 5);
-        lmsInstance->AddBook("1234567892", "your book", "Zumsteg", "Remo", 2012, 5);
-        lmsInstance->AddStudent("0123456", "Remo", "R and D", "remo@zumsteg.com");
-        lmsInstance->AddStudent("0123457", "Zumsteg", "R and D 2", "zumsteg@remo.com");
-        lmsInstance->AddStudent("0123458", "Zumsteg", "R and D 2", "zumsteg@remo.com");
+        lmsInstance->AddBook("1234567890", "how to C++", "Hans Hacker", "Coding Inc.", 2012, 3);
+        lmsInstance->AddBook("1234567891", "How to Javascript", "Willi Web", "Coding Inc.", 2012, 5);
+        lmsInstance->AddBook("1234567892", "How to have fun outside", "Ferdinand Fun", "Better Life Publications", 2012,
+                             5);
+        lmsInstance->AddStudent("0123456", "Remo Zumsteg", "Department of Industrial Engineering & Management",
+                                "remo@zumsteg.com");
+        lmsInstance->AddStudent("0123457", "Hans Noetig", "Department of Education", "hans@noetig.com");
+        lmsInstance->AddStudent("0123458", "Suppe Chasper", "Department of Art", "suppe@guht.com");
     }
 
 
