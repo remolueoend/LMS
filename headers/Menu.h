@@ -5,6 +5,8 @@
 #include "List.h"
 #include <vector>
 #include <string>
+#include "LMS.h"
+#include "IO.h"
 
 using namespace std;
 
@@ -21,6 +23,8 @@ class Menu: public Selectable
         virtual ~Menu();
 
         void AddSubItem(Selectable* item);
+
+    void AddAction(string title, void (*handler)(LMS *sys, IO *io));
         vector<Selectable*> GetSubItems();
         void Render(vector<Menu*> menus);
     

@@ -22,7 +22,7 @@ class Action : public Selectable
          * \param title The title to show in the navigation
          * \param handler The handler function to execute
          */
-        Action(string title, std::function<void (LMS* sys, IO* io)> handler) : Selectable(title){
+        Action(string title, void (*handler)(LMS *sys, IO *io)) : Selectable(title) {
             pHandler = handler;
         };
 
@@ -43,7 +43,7 @@ class Action : public Selectable
     protected:
 
     private:
-        std::function<void (LMS* sys, IO* io)> pHandler;
+    void (*pHandler)(LMS *sys, IO *io);
 };
 
 #endif // ACTION_H

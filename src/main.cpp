@@ -54,27 +54,27 @@ int main()
 
     // Build the menu structure:
     Menu* mQuery = new Menu("Query the library");
-    mQuery->AddSubItem(Actions::BooksInfo);
-    mQuery->AddSubItem(Actions::StudentsInfo);
-    mQuery->AddSubItem(Actions::BorrowedBooks);
-    mQuery->AddSubItem(Actions::OverdueBooks);
-    mQuery->AddSubItem(Actions::ShowRecords);
+    mQuery->AddAction("Show book info", Actions::BooksInfo);
+    mQuery->AddAction("Show student info", Actions::StudentsInfo);
+    mQuery->AddAction("Show borrowed books", Actions::BorrowedBooks);
+    mQuery->AddAction("Show overdue books", Actions::OverdueBooks);
+    mQuery->AddAction("Show book records", Actions::ShowRecords);
     
     Menu* mManageData = new Menu("Manage data");
-    mManageData->AddSubItem(Actions::CreateBook);
-    mManageData->AddSubItem(Actions::UpdateBook);
-    mManageData->AddSubItem(Actions::RemoveBook);
-    mManageData->AddSubItem(Actions::CreateStudent);
-    mManageData->AddSubItem(Actions::UpdateStudent);
-    mManageData->AddSubItem(Actions::RemoveStudent);
+    mManageData->AddAction("Register a new book", Actions::CreateBook);
+    mManageData->AddAction("Update a book", Actions::UpdateBook);
+    mManageData->AddAction("Remove a book", Actions::RemoveBook);
+    mManageData->AddAction("Register a new student", Actions::CreateStudent);
+    mManageData->AddAction("Update a student", Actions::UpdateStudent);
+    mManageData->AddAction("Remove a student", Actions::RemoveStudent);
 
     Menu* mExport = new Menu("Export data");
-    mExport->AddSubItem(Actions::ExportBooks);
-    mExport->AddSubItem(Actions::ExportStudents);
+    mExport->AddAction("Export books", Actions::ExportBooks);
+    mExport->AddAction("Export students", Actions::ExportStudents);
 
     Menu* mRoot = new Menu("Main Menu");
-    mRoot->AddSubItem(Actions::BorrowBook);
-    mRoot->AddSubItem(Actions::ReturnBook);
+    mRoot->AddAction("Borrow a book", Actions::BorrowBook);
+    mRoot->AddAction("Return a book", Actions::ReturnBook);
     mRoot->AddSubItem(mManageData);
     mRoot->AddSubItem(mQuery);
     mRoot->AddSubItem(mExport);

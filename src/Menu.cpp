@@ -1,8 +1,6 @@
 #include "../headers/Menu.h"
-#include "../headers/Selectable.h"
 #include <iostream>
-#include <string>
-#include <vector>
+#include "../headers/Action.h"
 
 using namespace std;
 
@@ -17,6 +15,10 @@ Menu::~Menu()
 
 void Menu::AddSubItem(Selectable* item){
     pSubItems.push_back(item);
+}
+
+void Menu::AddAction(string title, void (*handler)(LMS *sys, IO *io)) {
+    AddSubItem(new Action(title, handler));
 }
 
 vector<Selectable*> Menu::GetSubItems(){

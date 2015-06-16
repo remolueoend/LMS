@@ -4,11 +4,10 @@
 #include <vector>
 #include <functional>
 
-template <class dataType>
-
 /** This generic class encapsulates a C++ vector array and provides additional functionality
  * for manipulating and querying data.
  */
+template<typename dataType>
 class List
 {
     public:

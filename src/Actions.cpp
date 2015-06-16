@@ -3,12 +3,8 @@
 //
 
 #include "../headers/Actions.h"
-#include "../headers/LMS.h"
-#include "../headers/Action.h"
-#include "../headers/IO.h"
 #include <iostream>
 #include "../headers/GroupableList.h"
-#include <ctime>
 #include <sstream>
 #include <fstream>
 #include <iomanip>
@@ -20,7 +16,7 @@ using namespace std;
 /**
  * Returns a pretty printed string of the gven book and its borrowings
  */
-string _getBookDetails(Book *book, List<Borrow *> *borrowings){
+string Actions::getBookDetails(Book *book, List<Borrow *> *borrowings) {
     stringstream ss;
     ss << "ISBN:\t\t" << book->GetISBN() << endl;
     ss << "title:\t\t" << book->GetTitle() << endl;
@@ -48,7 +44,7 @@ string _getBookDetails(Book *book, List<Borrow *> *borrowings){
 /**
  * Returns a pretty printed string of the gven book and its borrowings
  */
-string _getStundetDetails(Student* student, List<Borrow*>* borrowings){
+string Actions::getStudentDetails(Student *student, List<Borrow *> *borrowings) {
     stringstream ss;
     ss << "student ID:\t" << student->GetStudentId() << endl;
     ss << "name:\t\t" << student->GetName() << endl;
@@ -74,7 +70,7 @@ string _getStundetDetails(Student* student, List<Borrow*>* borrowings){
 /**
  * Allows registering a new book by entering all necessary information.
  */
-Action* Actions::CreateBook = new Action("Register a new book", [](LMS* sys, IO* io) -> void{
+void Actions::CreateBook(LMS *sys, IO *io) {
     string isbn = io->readISBN();
     string title = io->read("title");
     string author = io->read("author");
@@ -84,21 +80,21 @@ Action* Actions::CreateBook = new Action("Register a new book", [](LMS* sys, IO*
 
     sys->AddBook(isbn, title, author, publisher, year, quantity);
     cout << "Book successfully registered." << endl;
-});
+};
 
 /**
  * Allows selecting a single book and delete it
  */
-Action* Actions::RemoveBook = new Action("Delete a book", [](LMS* sys, IO* io) -> void {
+void Actions::RemoveBook(LMS *sys, IO *io) {
     Book* book = io->readBook(sys);
     sys->DeleteBook(book);
     cout << "Book was deleted successfully." << endl;
-});
+};
 
 /**
  * Allows registering a new student by entering all necessary information.
  */
-Action* Actions::CreateStudent = new Action("Register a new student", [](LMS* sys, IO* io) -> void{
+void Actions::CreateStudent(LMS *sys, IO *io) {
     string studentId = io->readStudentID();
     string name = io->read("name");
     string dept = io->read("department");
@@ -106,100 +102,100 @@ Action* Actions::CreateStudent = new Action("Register a new student", [](LMS* sy
 
     sys->AddStudent(studentId, name, dept, email);
     cout << "Stundent successfully registered" << endl;
-});
+};
 
 /**
  * Allows querying for a single student and delete it.
  */
-Action* Actions::RemoveStudent = new Action("Delete a student", [](LMS* sys, IO* io) -> void {
+void Actions::RemoveStudent(LMS *sys, IO *io) {
     Student* student = io->readStudent(sys);
     sys->DeleteStudent(student);
     cout << "Stundent was deleted successfully." << endl;
-});
+};
 
 /**
  * Allows borrowing a book by querying for a single student and book.
  */
-Action* Actions::BorrowBook = new Action("Borrow a book", [](LMS* sys, IO* io) -> void{
+void Actions::BorrowBook(LMS *sys, IO *io) {
     Book* book = io->readBook(sys);
     Student* student = io->readStudent(sys);
-    Borrow* borrow = sys->BorrowBook(book, student);
+    sys->BorrowBook(book, student);
     cout << "Book borrowed successfully. Quantity left: " << sys->QuantitiesLeft(book) << endl;
 
-});
+};
 
 /**
  * Allows returning a book by querying for the book and the student.
  */
-Action* Actions::ReturnBook = new Action("Return a book", [](LMS* sys, IO* io) -> void{
+void Actions::ReturnBook(LMS *sys, IO *io) {
     Book* book = io->readBook(sys);
     Student* student = io->readStudent(sys);
-    Borrow* borrow = sys->ReturnBook(book, student);
+    sys->ReturnBook(book, student);
     cout << "Book returned successfully. Quantity left: " << sys->QuantitiesLeft(book) << endl;
-});
+};
 
 /**
  *  Allows querying for one or more books and shows the details about the found books.
  */
-Action* Actions::BooksInfo = new Action("Get book info", [](LMS* sys, IO* io) -> void {
+void Actions::BooksInfo(LMS *sys, IO *io) {
     List<Book*>* books = io->readBooks(sys, true);
     cout << endl << "Found " << books->Count() << " book(s):" << endl;
     books->ForEach([sys](Book* b) -> void {
         cout << "---------------------------------------------------" << endl;
         List<Borrow*>* borrowings = sys->GetBorrowings(b);
-        cout << _getBookDetails(b, borrowings);
+        cout << getBookDetails(b, borrowings);
     });
-});
+};
 
 /**
  * Shows a detailed list of all books which are borrowed and by whom.
  */
-Action* Actions::BorrowedBooks = new Action("Show borrowed books", [](LMS* sys, IO* io) -> void {
+void Actions::BorrowedBooks(LMS *sys, IO *io) {
     GroupableList<Book*, Borrow*>* list = new GroupableList<Book*, Borrow*>(sys->GetBorrowings());
     Dictionary<Book*, List<Borrow*>*> dict = list->GroupBy([](Borrow* b) -> Book* { return b->GetBook(); });
     if(dict.Count() > 0){
         dict.ForEach([](KeyValuePair<Book*, List<Borrow*>*>* pair) -> void {
             cout << "---------------------------------------------------" << endl;
-            cout << _getBookDetails(pair->Key(), pair->Value());
+            cout << getBookDetails(pair->Key(), pair->Value());
         });
     }else{
         cout << "Currenty no books are borrowed." << endl;
     }
-});
+};
 
 /**
  * Shows a list of all borrowed books which are overdue.
  */
-Action* Actions::OverdueBooks = new Action("Show overdue books", [](LMS* sys, IO* io) -> void {
+void Actions::OverdueBooks(LMS *sys, IO *io) {
     GroupableList<Book*, Borrow*>* list = new GroupableList<Book*, Borrow*>(sys->GetBorrowings(true));
     Dictionary<Book*, List<Borrow*>*> dict = list->GroupBy([](Borrow* b) -> Book* { return b->GetBook(); });
     if(dict.Count() > 0){
         dict.ForEach([](KeyValuePair<Book*, List<Borrow*>*>* pair) -> void {
             cout << "---------------------------------------------------" << endl;
-            cout << _getBookDetails(pair->Key(), pair->Value());
+            cout << getBookDetails(pair->Key(), pair->Value());
         });
     }else{
         cout << "Currenty no books are overdue." << endl;
     }
-});
+};
 
 /**
  * Shows detailed information about one or more students.
  */
-Action* Actions::StudentsInfo = new Action("Get student info", [](LMS* sys, IO* io) -> void {
+void Actions::StudentsInfo(LMS *sys, IO *io) {
     List<Student*>* students = io->readStudents(sys, true);
     cout << endl << "Found " << students->Count() << " student(s):" << endl;
     students->ForEach([sys](Student* s) -> void {
         cout << "---------------------------------------------------" << endl;
         List<Borrow*>* borrowings = sys->GetBorrowings(s);
-        cout << _getStundetDetails(s, borrowings);
+        cout << getStudentDetails(s, borrowings);
     });
-});
+};
 
 /**
  * Allows querying for a single book and update its properties.
  */
-Action* Actions::UpdateBook = new Action("Update book", [](LMS* sys, IO* io) -> void {
+void Actions::UpdateBook(LMS *sys, IO *io) {
     Book* book = io->readBook(sys);
     Book* nb = new Book();
 
@@ -214,12 +210,12 @@ Action* Actions::UpdateBook = new Action("Update book", [](LMS* sys, IO* io) -> 
 
     book->Update(nb);
     cout << "Book updated successfully." << endl;
-});
+};
 
 /**
  * ALlows querying for a single student and update its properties.
  */
-Action* Actions::UpdateStudent = new Action("Update student", [](LMS* sys, IO* io) -> void {
+void Actions::UpdateStudent(LMS *sys, IO *io) {
     Student* student = io->readStudent(sys);
     Student* ns = new Student();
 
@@ -232,12 +228,12 @@ Action* Actions::UpdateStudent = new Action("Update student", [](LMS* sys, IO* i
 
     student->Update(ns);
     cout << "Student updated successfully." << endl;
-});
+};
 
 /**
  * Allows querying for a single book and shows its record list.
  */
-Action* Actions::ShowRecords = new Action("show book records", [](LMS* sys, IO* io) -> void {
+void Actions::ShowRecords(LMS *sys, IO *io) {
     Book* book = io->readBook(sys);
     List<Record*>* records = sys->GetRecords(book);
 
@@ -257,12 +253,12 @@ Action* Actions::ShowRecords = new Action("show book records", [](LMS* sys, IO* 
         << r->StudentName() << " (" << r->StudentID() << ")"
         << endl;
     });
-});
+};
 
 /**
  * Allows exporting all book records to the specified file path.
  */
-Action* Actions::ExportBooks = new Action("Export books", [](LMS* sys, IO* io) -> void {
+void Actions::ExportBooks(LMS *sys, IO *io) {
     cout << "The information of all registered books will be stored in the given path." << endl;
     cout << "If the path already exists, the existing file will be replaced!" << endl;
     cout << "The provided path can be relative to the LMS executable's location or a static path." << endl;
@@ -276,17 +272,17 @@ Action* Actions::ExportBooks = new Action("Export books", [](LMS* sys, IO* io) -
     sys->Books()->ForEach([sys, &myfile](Book* b) -> void {
         myfile << "---------------------------------------------------" << endl;
         List<Borrow*>* borrowings = sys->GetBorrowings(b);
-        myfile << _getBookDetails(b, borrowings);
+        myfile << getBookDetails(b, borrowings);
     });
 
     myfile.close();
     cout << "Export done." << endl;
-});
+};
 
 /**
  * Allows exporting all student records to the specified file path.
  */
-Action* Actions::ExportStudents = new Action("Export students", [](LMS* sys, IO* io) -> void {
+void Actions::ExportStudents(LMS *sys, IO *io) {
     cout << "The information of all registered students will be stored in the given path." << endl;
     cout << "If the path already exists, the existing file will be replaced!" << endl;
     cout << "The provided path can be relative to the LMS executable's location or a static path." << endl;
@@ -300,9 +296,9 @@ Action* Actions::ExportStudents = new Action("Export students", [](LMS* sys, IO*
     sys->Students()->ForEach([sys, &myfile](Student* s) -> void {
         myfile << "---------------------------------------------------" << endl;
         List<Borrow*>* borrowings = sys->GetBorrowings(s);
-        myfile << _getStundetDetails(s, borrowings);
+        myfile << getStudentDetails(s, borrowings);
     });
 
     myfile.close();
     cout << "Export done." << endl;
-});
+};
